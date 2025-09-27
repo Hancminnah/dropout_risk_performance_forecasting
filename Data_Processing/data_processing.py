@@ -1,5 +1,14 @@
 import pandas as pd
 import numpy as np
+from sklearn.model_selection import train_test_split
+from lib.modelling_libraries import train_evaluate_LR, \
+                                    train_randomsearch_evaluate_RF, \
+                                    train_gridsearch_evaluate_RF, \
+                                    train_randomsearch_evaluate_XGB, \
+                                    train_gridsearch_evaluate_XGB
+
+random_seed_nb = 42
+n_folds = 5
 perf_data = pd.read_csv('./data/course performance data.csv')
 dropout_data = pd.read_csv('./data/student enrollment data.csv')
 merged_data = pd.merge(perf_data, dropout_data, on='student_id',how='outer')
@@ -39,15 +48,33 @@ print("\nPercentage of missing values per column:")
 print(missing_percentage)
 
 final_data = final_data.drop(columns=['university_gpa','student_id'])
-# Analyze each subject group separately
-grouped_cs = merged_data[merged_data['department']=='Computer Science']
-grouped_ds = merged_data[merged_data['department']=='Design']
-grouped_eg = merged_data[merged_data['department']=='Engineering']
-grouped_bs = merged_data[merged_data['department']=='Business']
+
+X, y = final_data.drop(columns=['enrollment_status_dropped out']), final_data['enrollment_status_dropped out']
+X = X.drop(columns=['entry_year_2019','entry_year_2020','entry_year_2021','entry_year_2022'])  # to avoid dummy variable trap
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=random_seed_nb,stratify=y)
+
+# Random Forest for Outcome 1 and Outcome 2
+output_random_rf = train_randomsearch_evaluate_RF(random_seed_nb, n_folds, X_train, y_train, X_test, y_test)
+# param_rf_gs1 = {"n_estimators" : [99,100,101],
+#             "min_samples_split" : [2,3,4],
+#             "min_samples_leaf" : [3,4],
+#            "max_features" : ["sqrt"],
+#           "max_depth" : [19,20,21,None],
+#           "criterion" :['gini','log_loss'],
+#           "bootstrap" : [False]}        
+# rf_model_outcome, rf_results_outcome, calibrated_rf_model_outcome, calibrated_rf_results_outcome = train_gridsearch_evaluate_RF(random_seed_nb, param_rf_gs1, X_train, y_train, X_test, y_test)
+
+output_random_xgb = train_randomsearch_evaluate_XGB(random_seed_nb, n_folds, X_train, y_train, X_test, y_test)
+
+# # Analyze each subject group separately
+# grouped_cs = merged_data[merged_data['department']=='Computer Science']
+# grouped_ds = merged_data[merged_data['department']=='Design']
+# grouped_eg = merged_data[merged_data['department']=='Engineering']
+# grouped_bs = merged_data[merged_data['department']=='Business']
 
 
-val_cs = grouped_cs['completion_status'].value_counts()
-val_cs = val_cs/val_cs.sum()
+# val_cs = grouped_cs['completion_status'].value_counts()
+# val_cs = val_cs/val_cs.sum()
 
 # References:
 # 1. https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-017-0442-1#:~:text=The%20MAR%20and%20MNAR%20conditions,analyses%20to%20handle%20MNAR%20data.
