@@ -25,3 +25,10 @@ for name, group in grouped_cs:
 grp = grouped_cs.get_group(1072)
 grp = grp.replace({'semester': {'Fall 2020': 0, 'Spring 2021': 6, 'Fall 2021': 12, 'Spring 2022': 18,'Fall 2022': 24,'Spring 2023': 30}})
 grp = grp.groupby('course_name') 
+
+# Check Dropout Distribution
+# Check Missing Data
+# Check Outlier
+# Check Correlation between Features
+# Descriptives
+# Statistical Testings
