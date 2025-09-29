@@ -10,11 +10,3 @@ Tasks
 3.	Develop a Predictive Modeling that predicts dropout risk
 
 4.	Perform a Time Series Analysis to identify trends and anomalies
-   
-5.	Ethical Considerations:
-   - Discuss implications of predictive modeling in education.
-   - Propose strategies for responsible data use and bias mitigation.
-
-6.	Reporting
-   - Summarize findings, model performance, and strategic recommendations.
-   - Include visualizations and a slide deck.
