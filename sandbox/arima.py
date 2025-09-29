@@ -84,3 +84,5 @@ pyplot.show()
 # 2. https://stackoverflow.com/questions/62783633/how-to-interpret-plots-of-autocorrelation-and-partial-autocorrelation-using-pyth
 # 3. https://people.duke.edu/%7Ernau/411arim3.htm
 # 4. https://people.duke.edu/%7Ernau/411arim3.htm
+# 5. https://www.geeksforgeeks.org/machine-learning/time-series-analysis-and-forecasting/
+# 6. https://www.geeksforgeeks.org/machine-learning/python-arima-model-for-time-series-forecasting/
