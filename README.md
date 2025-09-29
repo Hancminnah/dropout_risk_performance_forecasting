@@ -1,7 +1,7 @@
 # dropout_risk_performance_forecasting
 
 Objective
-Use the provided datasets to perform advanced analysis and modeling to identify dropout risks and forecast academic performance.
+Perform advanced analysis and modeling to identify dropout risks and forecast academic performance.
 Tasks
 1.	Perform Data Cleaning & Feature Engineering:
    
