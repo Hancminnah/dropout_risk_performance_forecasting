@@ -49,8 +49,6 @@ booster1.save_raw = lambda: model_bytearray1
 explainer_xgb1 = shap.TreeExplainer(booster1)
 shap_values_xgb1 = explainer_xgb1.shap_values(X1_transform_xgb)
 
-
-
 os.makedirs('./results/best_models/non_time_series/outcome1/shap_outputs',exist_ok=True)
 
 for outcome_type in [1]:
