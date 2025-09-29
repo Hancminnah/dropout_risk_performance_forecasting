@@ -6,6 +6,7 @@
 import pandas as pd
 import copy
 from plotnine import ggplot, aes, geom_line, geom_point, facet_wrap, labs, theme_bw
+from plotnine import ggsave
 
 
 # Process Data
@@ -52,18 +53,21 @@ p = (
     + labs(x='Semester', y='Percentage of students who failed', title='Failure Rate by Course and Semester', color='Course Name')
     + theme_bw()
 )
+
+ggsave(p, filename='results/failure_rate_by_course_and_semester.png', verbose=False)
 print(p)
 
 
-pyplot.plot(design_thinking.index,design_thinking, linestyle='--', marker='o', color='k')
-pyplot.plot(engineering_basics.index,engineering_basics, linestyle='--', marker='o', color='b')
-pyplot.plot(intro_cs.index,intro_cs, linestyle='--', marker='o', color='r')
-pyplot.plot(prin_business.index,prin_business, linestyle='--', marker='o', color='g')
-pyplot.xlabel('Semester')
-pyplot.ylabel('Percentage of students who failed')
-# Add legend
-pyplot.legend(['Design Thinking','Engineering Basics','Intro to CS','Principles of Business'])
-pyplot.show()
+# pyplot.plot(design_thinking.index,design_thinking, linestyle='--', marker='o', color='k')
+# pyplot.plot(engineering_basics.index,engineering_basics, linestyle='--', marker='o', color='b')
+# pyplot.plot(intro_cs.index,intro_cs, linestyle='--', marker='o', color='r')
+# pyplot.plot(prin_business.index,prin_business, linestyle='--', marker='o', color='g')
+# pyplot.xlabel('Semester')
+# pyplot.ylabel('Percentage of students who failed')
+# # Add legend
+# pyplot.legend(['Design Thinking','Engineering Basics','Intro to CS','Principles of Business'])
+# pyplot.show()
+
 # References:
 # 1. https://www.datacamp.com/tutorial/arima
 # 2. https://stackoverflow.com/questions/62783633/how-to-interpret-plots-of-autocorrelation-and-partial-autocorrelation-using-pyth
