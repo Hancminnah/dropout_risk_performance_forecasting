@@ -43,7 +43,7 @@ final_data = final_data.merge(grade_pivot,on='student_id',how='left')
 final_data['entry_year'] = final_data['entry_year'].astype(str)
 # one hot encoding for categorical variables
 final_data = pd.get_dummies(final_data, columns=['gender','department','enrollment_status','entry_year'], drop_first=False)
-final_data = final_data.drop(columns=['gender_M','department_Design','enrollment_status_enrolled','enrollment_status_graduated','entry_year_2018'])
+final_data = final_data.drop(columns=['gender_M','department_Design','enrollment_status_enrolled','enrollment_status_graduated','entry_year_2018','completed','in progress','A'])
 # Convert boolean columns to integers
 final_data = final_data.astype({'gender_F': int, 'department_Computer Science': int, 'department_Business': int,'department_Engineering': int, 'enrollment_status_dropped out': int, 'entry_year_2019': int, 'entry_year_2020': int, 'entry_year_2021': int, 'entry_year_2022': int})
 
@@ -55,7 +55,7 @@ print(missing_percentage)
 final_data = final_data.drop(columns=['university_gpa','student_id'])
 
 X, y = final_data.drop(columns=['enrollment_status_dropped out']), final_data['enrollment_status_dropped out']
-X = X.drop(columns=['entry_year_2019','entry_year_2020','entry_year_2021','entry_year_2022'])  # to avoid dummy variable trap
+# X = X.drop(columns=['entry_year_2019','entry_year_2020','entry_year_2021','entry_year_2022'])  # to avoid dummy variable trap
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=random_seed_nb,stratify=y)
 
 # Feature Selection Method 1: L1 Regression
@@ -90,7 +90,7 @@ param_xgb_gs = {"n_estimators":[99,100,101],
         "max_depth":[15,16,17],
         "gamma":[0.001],
         "colsample_bytree":[0.1],
-        "learning_rate":[0.01]
+        "learning_rate":[0.1]
 }
 xgb_model_outcome, xgb_results_outcome, calibrated_xgb_model_outcome, calibrated_xgb_results_outcome = train_gridsearch_evaluate_XGB(random_seed_nb, param_xgb_gs, X_train, y_train, X_test, y_test)
 
