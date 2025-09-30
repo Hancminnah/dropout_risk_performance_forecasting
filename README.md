@@ -5,7 +5,7 @@ Perform advanced analysis and modeling to identify dropout risks and forecast ac
 Tasks
 1.	Perform Data Cleaning & Feature Engineering
    
-2.	Conduct Exploratory Data Analysis (EDA) (Missing Data Analysis, Correlation Analysis, Descriptives, Statiscal Comparisons)
+2.	Conduct Exploratory Data Analysis (EDA) (Missing Data Analysis, Correlation Analysis, Descriptives, Statistical Comparisons)
 
 3.	Feature Selection (L1 Regularisation, Boruta, Variance Importance Threshhold)
    
