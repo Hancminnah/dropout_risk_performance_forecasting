@@ -3,9 +3,9 @@
 Perform advanced analysis and modeling to identify dropout risks and forecast academic performance.
 
 Tasks
-1.	Perform Data Cleaning & Feature Engineering:
+1.	Perform Data Cleaning & Feature Engineering
    
-2.	Conduct Exploratory Data Analysis (EDA):
+2.	Conduct Exploratory Data Analysis (EDA) (Missing Data Analysis, Correlation Analysis)
    
 3.	Develop a Predictive Modeling that predicts dropout risk
 
