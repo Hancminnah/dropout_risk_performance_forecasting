@@ -6,7 +6,9 @@ Tasks
 1.	Perform Data Cleaning & Feature Engineering
    
 2.	Conduct Exploratory Data Analysis (EDA) (Missing Data Analysis, Correlation Analysis)
-   
-3.	Develop a Predictive Modeling that predicts dropout risk
 
-4.	Perform a Time Series Analysis to identify trends and anomalies
+3.	Feature Selection (L1 Regularisation, Boruta, Variance Importance Threshhold)
+   
+4.	Develop a Predictive Modeling that predicts dropout risk
+
+5.	Perform a Time Series Analysis to identify trends and anomalies
