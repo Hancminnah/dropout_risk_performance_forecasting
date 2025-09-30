@@ -1,0 +1,60 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+Read time series data
+```{r}
+library(tidyverse)
+library(gt)
+library(kableExtra)
+library(knitr)
+library(tidyquant) # for getting stock price
+library(scales) # for formatting numbers in ggplot2
+# library(ggfortify) # for autoplot conflicting with forecast!
+library(forecast) # for auto.arima
+
+# define a `set_theme` function
+set_theme <- function(...) {
+  # theme(plot.background = element_rect(fill = 'white', colour = 'black')) +
+  theme(panel.background = element_rect(fill = 'ivory', colour = 'black')) +
+  theme(panel.grid.major = element_line(linetype = "dashed", color = "gray70"))
+}
+
+time_series_df <- read.csv("/Users/minminchan/Documents/projects/dropout_risk_performance_forecasting/results/time_series_data.csv")
+design_thinking <- time_series_df[time_series_df$course_name== "Design Thinking", ]
+intro_to_cs <- time_series_df[time_series_df$course_name== "Intro to CS", ]
+engineering_basics <- time_series_df[time_series_df$course_name== "Engineering Basics", ]
+prin_business <- time_series_df[time_series_df$course_name== "Principles of Business", ]
+```
+
+Plot original and predicted values with confidence interval using ggplot
+```{r}
+model_design <- arima(design_thinking$completion_status_failed, order=c(1,0,0))
+#model_design <- auto.arima(design_thinking$completion_status_failed)
+model_design |> forecast::forecast(h=12) |>
+  autoplot() + ylab("Failed Completion Status") + xlab("Semester") + set_theme()
+```
+
+```{r}
+model_cs <- arima(intro_to_cs$completion_status_failed, order=c(1,0,0))
+#model_design <- auto.arima(design_thinking$completion_status_failed)
+model_cs |> forecast::forecast(h=12) |>
+  autoplot() + ylab("Failed Completion Status") + xlab("Semester") + set_theme()
+```
+```{r}
+model_eng <- arima(engineering_basics$completion_status_failed, order=c(1,0,0))
+#model_design <- auto.arima(design_thinking$completion_status_failed)
+model_eng |> forecast::forecast(h=12) |>
+  autoplot() + ylab("Failed Completion Status") + xlab("Semester") + set_theme()
+```
+
+```{r}
+model_bus <- arima(prin_business$completion_status_failed, order=c(1,0,0))
+#model_design <- auto.arima(design_thinking$completion_status_failed)
+model_bus |> forecast::forecast(h=12) |>
+  autoplot() + ylab("Failed Completion Status") + xlab("Semester") + set_theme()
+```
+
+
