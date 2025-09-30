@@ -2,3 +2,4 @@ data
 results
 .DS_Store
 .Rhistory
+lib/generate_descriptives_adapted.py
