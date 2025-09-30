@@ -1,7 +1,5 @@
 # dropout_risk_performance_forecasting
 
-Objective
-
 Perform advanced analysis and modeling to identify dropout risks and forecast academic performance.
 
 Tasks
