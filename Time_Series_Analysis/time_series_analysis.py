@@ -7,6 +7,7 @@ import pandas as pd
 import copy
 from plotnine import ggplot, aes, geom_line, geom_point, facet_wrap, labs, theme_bw
 from plotnine import ggsave
+from plotnine import scale_x_datetime
 
 
 # Process Data
@@ -43,7 +44,9 @@ prin_business = prin_business.set_index('semester')
 prin_business.index.freq = 'semester'
 
 plot_df = times_series_df.copy()
-plot_df['semester'] = plot_df['semester'].astype(str)
+# Ensure 'semester' is ordered categorically for proper plotting
+semester_order = ['Fall 2020', 'Spring 2021', 'Fall 2021', 'Spring 2022', 'Fall 2022', 'Spring 2023']
+plot_df['semester'] = pd.Categorical(plot_df['semester'], categories=semester_order, ordered=True)
 
 p = (
     ggplot(plot_df, aes(x='semester', y='completion_status_failed', group='course_name', color='course_name'))
