@@ -5,6 +5,8 @@
 
 import pandas as pd
 import copy
+from sklearn.linear_model import LinearRegression
+import numpy as np
 from plotnine import ggplot, aes, geom_line, geom_point, facet_wrap, labs, theme_bw
 from plotnine import ggsave
 from plotnine import scale_x_datetime
@@ -68,9 +70,91 @@ design_thinking_series = times_series_df[times_series_df['course_name']=='Design
 design_thinking_diff = design_thinking_series.diff().dropna()
 check_stationarity(design_thinking_diff)
 
+# Since the series is not stationary, difference it to make stationary
+engineering_basic_series = times_series_df[times_series_df['course_name']=='Engineering Basics']['completion_status_failed']
+engineering_basic_diff = engineering_basic_series.diff().dropna()
+check_stationarity(engineering_basic_diff)
+
+# Since the series is not stationary, difference it to make stationary
+intro_cs_series = times_series_df[times_series_df['course_name']=='Intro to CS']['completion_status_failed']
+intro_cs_diff = intro_cs_series.diff().dropna()
+check_stationarity(intro_cs_diff)
+
+# Since the series is not stationary, difference it to make stationary
+prin_business_series = times_series_df[times_series_df['course_name']=='Principles of Business']['completion_status_failed']
+prin_business_diff = prin_business_series.diff().dropna()
+check_stationarity(prin_business_diff)
+
+# Plot ACF and PACF
+import matplotlib.pyplot as plt
+from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+plt.figure(figsize=(12, 6))
+plt.subplot(121)
+plot_acf(design_thinking_diff, ax=plt.gca(), lags=4)
+plt.subplot(122)
+plot_pacf(design_thinking_diff, ax=plt.gca())
+plt.tight_layout()
 
 
+X = np.array(range(len(design_thinking_series))).reshape(-1, 1)
+y = design_thinking_series.values
+model = LinearRegression()
+model.fit(X, y)
+trend = model.predict(X)
+plt.figure(figsize=(8, 6))
+plt.plot(plot_df['semester'].iloc[:6], y, label='Original')
+plt.plot(plot_df['semester'].iloc[:6], trend, color='red', linestyle = '--', label='Trend')
+plt.xlabel('Semester')
+plt.ylabel('Percentage of students who failed')
+plt.title('Design Thinking')
+plt.legend()
+plt.savefig('Time_Series_Analysis/design_thinking_trend.png')
+plt.show()
 
+X = np.array(range(len(engineering_basic_series))).reshape(-1, 1)
+y = engineering_basic_series.values
+model = LinearRegression()
+model.fit(X, y)
+trend = model.predict(X)
+plt.figure(figsize=(8, 6))
+plt.plot(plot_df['semester'].iloc[:6], y, label='Original')
+plt.plot(plot_df['semester'].iloc[:6], trend, color='red', linestyle = '--', label='Trend')
+plt.xlabel('Semester')
+plt.ylabel('Percentage of students who failed')
+plt.title('Engineering Basics')
+plt.legend()
+plt.savefig('Time_Series_Analysis/engineering_basic_trend.png')
+plt.show()
+
+X = np.array(range(len(intro_cs_series))).reshape(-1, 1)
+y = intro_cs_series.values
+model = LinearRegression()
+model.fit(X, y)
+trend = model.predict(X)
+plt.figure(figsize=(8, 6))
+plt.plot(plot_df['semester'].iloc[:6], y, label='Original')
+plt.plot(plot_df['semester'].iloc[:6], trend, color='red', linestyle = '--', label='Trend')
+plt.xlabel('Semester')
+plt.ylabel('Percentage of students who failed')
+plt.title('Intro to CS')
+plt.legend()
+plt.savefig('Time_Series_Analysis/intro_cs_trend.png')
+plt.show()
+
+X = np.array(range(len(prin_business_series))).reshape(-1, 1)
+y = prin_business_series.values
+model = LinearRegression()
+model.fit(X, y)
+trend = model.predict(X)
+plt.figure(figsize=(8, 6))
+plt.plot(plot_df['semester'].iloc[:6], y, label='Original')
+plt.plot(plot_df['semester'].iloc[:6], trend, color='red', linestyle = '--', label='Trend')
+plt.xlabel('Semester')
+plt.ylabel('Percentage of students who failed')
+plt.title('Principles of Business')
+plt.legend()
+plt.savefig('Time_Series_Analysis/prin_business_trend.png')
+plt.show()
 # Note: The ARIMA model fitting and forecasting code is not included here as the dataset is small and primarily for demonstration.
 # References:
 # 1. https://www.datacamp.com/tutorial/arima

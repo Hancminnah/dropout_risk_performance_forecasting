@@ -5,6 +5,7 @@ editor: visual
 ---
 
 Read time series data
+
 ```{r}
 library(tidyverse)
 library(gt)
@@ -29,32 +30,47 @@ engineering_basics <- time_series_df[time_series_df$course_name== "Engineering B
 prin_business <- time_series_df[time_series_df$course_name== "Principles of Business", ]
 ```
 
+# Design Thinking
 Plot original and predicted values with confidence interval using ggplot
-```{r}
-model_design <- arima(design_thinking$completion_status_failed, order=c(1,0,0))
-#model_design <- auto.arima(design_thinking$completion_status_failed)
-model_design |> forecast::forecast(h=12) |>
-  autoplot() + ylab("Failed Completion Status") + xlab("Semester") + set_theme()
-```
 
 ```{r}
-model_cs <- arima(intro_to_cs$completion_status_failed, order=c(1,0,0))
-#model_design <- auto.arima(design_thinking$completion_status_failed)
-model_cs |> forecast::forecast(h=12) |>
-  autoplot() + ylab("Failed Completion Status") + xlab("Semester") + set_theme()
+model_design1 <- auto.arima(design_thinking$completion_status_failed)
+model_design2 <- arima(design_thinking$completion_status_failed, order=c(0,0,0))
+model_design1 |> forecast::forecast(h=12) |>
+  autoplot() + ylab("Percentage of students who failed") + xlab("Semester") + set_theme() + ggtitle("Design Thinking: Forecasts from ARIMA(0,0,0) with non-zero mean")
+# model_design2 |> forecast::forecast(h=12) |>
+#   autoplot() + ylab("Percentage of students who failed") + xlab("Semester") + set_theme()
+ggsave("/Users/minminchan/Documents/projects/dropout_risk_performance_forecasting/Time_Series_Analysis/design_thinking_forecast.png")
 ```
+# Intro to CS
 ```{r}
-model_eng <- arima(engineering_basics$completion_status_failed, order=c(1,0,0))
-#model_design <- auto.arima(design_thinking$completion_status_failed)
-model_eng |> forecast::forecast(h=12) |>
-  autoplot() + ylab("Failed Completion Status") + xlab("Semester") + set_theme()
+model_cs1 <- arima(intro_to_cs$completion_status_failed, order=c(1,0,0))
+model_cs2 <- auto.arima(intro_to_cs$completion_status_failed)
+model_cs1 |> forecast::forecast(h=12) |>
+  autoplot() + ylab("Percentage of students who failed") + xlab("Semester") + set_theme() + ggtitle("Intro to CS: Forecasts from ARIMA(0,0,0) with non-zero mean")
+# model_cs2 |> forecast::forecast(h=12) |>
+#   autoplot() + ylab("Percentage of students who failed") + xlab("Semester") + set_theme()
+ggsave("/Users/minminchan/Documents/projects/dropout_risk_performance_forecasting/Time_Series_Analysis/intro_to_cs.png")
 ```
-
+# Engineering Basics
 ```{r}
-model_bus <- arima(prin_business$completion_status_failed, order=c(1,0,0))
-#model_design <- auto.arima(design_thinking$completion_status_failed)
-model_bus |> forecast::forecast(h=12) |>
-  autoplot() + ylab("Failed Completion Status") + xlab("Semester") + set_theme()
+model_eng1 <- arima(engineering_basics$completion_status_failed, order=c(0,0,0))
+model_eng2 <- auto.arima(engineering_basics$completion_status_failed)
+model_eng1 |> forecast::forecast(h=12) |>
+  autoplot() + ylab("Percentage of students who failed") + xlab("Semester") + set_theme() + ggtitle("Engineering Basics: Forecasts from ARIMA(0,0,0) with non-zero mean")
+# model_eng2 |> forecast::forecast(h=12) |>
+#   autoplot() + ylab("Percentage of students who failed") + xlab("Semester") + set_theme()
+ggsave("/Users/minminchan/Documents/projects/dropout_risk_performance_forecasting/Time_Series_Analysis/engineering_basics_forecast.png")
 ```
-
+# Principles of Business and save plot
+```{r}
+model_bus1 <- arima(prin_business$completion_status_failed, order=c(0,0,0))
+model_bus2 <- auto.arima(design_thinking$completion_status_)
+model_bus1 |> forecast::forecast(h=12) |>
+  autoplot() + ylab("Percentage of students who failed") + xlab("Semester") + set_theme() + ggtitle("Principles of Business: Forecasts from ARIMA(0,0,0) with non-zero mean")
+# model_bus2 |> forecast::forecast(h=12) |>
+#   autoplot() + ylab("Percentage of students who failed") + xlab("Semester") + set_theme()
+# save plot
+ggsave("/Users/minminchan/Documents/projects/dropout_risk_performance_forecasting/Time_Series_Analysis/prin_business_forecast.png")
+```
 
