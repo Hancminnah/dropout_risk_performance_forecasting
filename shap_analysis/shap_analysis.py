@@ -50,6 +50,23 @@ explainer_xgb1 = shap.TreeExplainer(booster1)
 shap_values_xgb1 = explainer_xgb1.shap_values(X1_transform_xgb)
 
 os.makedirs('./results/best_models/non_time_series/outcome1/shap_outputs',exist_ok=True)
+os.makedirs('./results/best_models/non_time_series/outcome1/shap_outputs/business_dropouts',exist_ok=True)
+os.makedirs('./results/best_models/non_time_series/outcome1/shap_outputs/business_students',exist_ok=True)
+
+business_array = np.where(X1_transform['department_Business'] == 1)[0]
+b_array = np.where((X1_transform['department_Business'] == 1) & (y1_overall == 1))[0]
+# Force Plot
+for b in b_array:
+    plt.figure()
+    shap.force_plot(explainer_rf1.expected_value[1], shap_values_rf1[b,:], X1_transform.iloc[b, :], matplotlib=True,show=False)
+    plt.savefig('./results/best_models/non_time_series/outcome1/shap_outputs/business_dropouts/shap_force_plot_rf_model_'+str(b)+'.png')
+    plt.close()
+
+for bus in business_array:
+    plt.figure()
+    shap.force_plot(explainer_rf1.expected_value[1], shap_values_rf1[bus,:], X1_transform.iloc[bus, :], matplotlib=True,show=False)
+    plt.savefig('./results/best_models/non_time_series/outcome1/shap_outputs/business_students/shap_force_plot_rf_model_'+str(bus)+'.png')
+    plt.close()
 
 for outcome_type in [1]:
     for model_str in ['rf','xgb']:
