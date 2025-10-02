@@ -45,14 +45,8 @@ df['semester_num'] = df['semester'].apply(lambda x: int(x.split()[-1]) * 10 +
 # Sort by student_id and semester to ensure proper time sequence
 df = df.sort_values(['student_id', 'semester_num'])
 
-# Encode categorical variables
-label_encoders = {}
-categorical_cols = ['grade', 'completion_status']
-
-for col in categorical_cols:
-    le = LabelEncoder()
-    df[col + '_encoded'] = le.fit_transform(df[col])
-    label_encoders[col] = le
+df['grade_encoded'] = df['grade'].map({'A': 0, 'B': 1, 'C': 2, 'D': 3, 'F': 4})
+df['completion_status_encoded'] = df['completion_status'].map({'completed': 0, 'in progress': 1, 'failed': 2})
 
 # Create lagged features function
 def create_lagged_features(group, lag_periods=5):
@@ -66,10 +60,10 @@ def create_lagged_features(group, lag_periods=5):
         # Lagged completion status
         group[f'status_lag_{lag}'] = group['completion_status_encoded'].shift(lag)
         
-        # Grade trend features
-        if lag > 1:
-            group[f'grade_trend_lag_{lag}'] = group['grade_encoded'].shift(lag-1) - group['grade_encoded'].shift(lag)
-            group[f'status_trend_lag_{lag}'] = group['completion_status_encoded'].shift(lag-1) - group['completion_status_encoded'].shift(lag)
+        # # Grade trend features
+        # if lag > 0:
+        #     group[f'grade_trend_lag_{lag}'] = group['grade_encoded'].shift(lag-1) - group['grade_encoded'].shift(lag)
+        #     group[f'status_trend_lag_{lag}'] = group['completion_status_encoded'].shift(lag-1) - group['completion_status_encoded'].shift(lag)
     
     return group
 
@@ -105,7 +99,7 @@ X = X[grade_lag_cols + grade_trend_lag_cols + status_lag_cols + status_trend_lag
 # Split the data
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=random_seed_nb, stratify=y)
 
-# # Feature Selection
+# Feature Selection
 # gl = LogisticGroupLasso(
 #     groups=col_groups,
 #     group_reg=0.05,
@@ -131,13 +125,20 @@ rf_model_outcome, rf_results_outcome, calibrated_rf_model_outcome, calibrated_rf
 
 
 output_random_xgb = train_randomsearch_evaluate_XGB(random_seed_nb, n_folds, X_train, y_train, X_test, y_test)
-param_xgb_gs = {"n_estimators":[99,100,101],
+param_xgb_gs = {"n_estimators":[499,500,501],
         "scale_pos_weight":[1,2],
-        "max_depth":[15,16,17],
-        "gamma":[0.001],
-        "colsample_bytree":[0.1],
+        "max_depth":[7,8,9],
+        "gamma":[0.01],
+        "colsample_bytree":[0.3],
         "learning_rate":[0.01]
 }
+# param_xgb_gs = {"n_estimators":[499,500,501],
+#         "scale_pos_weight":[1,2],
+#         "max_depth":[7,8,9],
+#         "gamma":[0.01],
+#         "colsample_bytree":[0.3],
+#         "learning_rate":[0.01]
+# }
 xgb_model_outcome, xgb_results_outcome, calibrated_xgb_model_outcome, calibrated_xgb_results_outcome = train_gridsearch_evaluate_XGB(random_seed_nb, param_xgb_gs, X_train, y_train, X_test, y_test)
 
 # ===== Results ===== #

@@ -9,21 +9,21 @@ import pandas as pd
 import shap
 import os
 
-rf_model_outcome1 = pickle.load(open('./results/best_models/non_time_series/random_forest_model_outcome.pkl','rb')).best_estimator_
-xgb_model_outcome1 = pickle.load(open('./results/best_models/non_time_series/xgboost_model_outcome.pkl','rb')).best_estimator_
+rf_model_outcome1 = pickle.load(open('./results/best_models/time_series/random_forest_model_outcome.pkl','rb')).best_estimator_
+xgb_model_outcome1 = pickle.load(open('./results/best_models/time_series/xgboost_model_outcome.pkl','rb')).best_estimator_
 
 
-df_train_imputed1 = pickle.load(open('./results/best_models/non_time_series/X_train.pkl','rb'))
-df_test_imputed1 = pickle.load(open('./results/best_models/non_time_series/X_test.pkl','rb'))
-y1_train = pickle.load(open('./results/best_models/non_time_series/y_train.pkl','rb'))
-y1_test = pickle.load(open('./results/best_models/non_time_series/y_test.pkl','rb'))
+df_train_imputed1 = pickle.load(open('./results/best_models/time_series/X_train.pkl','rb'))
+df_test_imputed1 = pickle.load(open('./results/best_models/time_series/X_test.pkl','rb'))
+y1_train = pickle.load(open('./results/best_models/time_series/y_train.pkl','rb'))
+y1_test = pickle.load(open('./results/best_models/time_series/y_test.pkl','rb'))
 
 
 X1_transform = pd.concat([df_train_imputed1, df_test_imputed1],axis=0)
 y1_overall = pd.concat([y1_train,y1_test],axis=0)
 
 current_variables = X1_transform.columns.tolist()
-renamed_variables = ['Age', 'High School GPA', 'Percentage of failed modules', 'Percentage of Grade A','Percentage of Grade B', 'Percentage of Grade C', 'Percentage of Grade D', 'Percentage of Grade F', 'Female', 'Business', 'Computer Science', 'Engineering', 'Entry Year 2019', 'Entry Year 2020', 'Entry Year 2021', 'Entry Year 2022']
+renamed_variables = current_variables.copy()
 
 rename_dict = dict(zip(current_variables, renamed_variables))
 
@@ -50,24 +50,9 @@ booster1.save_raw = lambda: model_bytearray1
 explainer_xgb1 = shap.TreeExplainer(booster1)
 shap_values_xgb1 = explainer_xgb1.shap_values(X1_transform_xgb)
 
-os.makedirs('./results/best_models/non_time_series/outcome1/shap_outputs',exist_ok=True)
-os.makedirs('./results/best_models/non_time_series/outcome1/shap_outputs/business_dropouts',exist_ok=True)
-os.makedirs('./results/best_models/non_time_series/outcome1/shap_outputs/business_students',exist_ok=True)
-
-business_array = np.where(X1_transform['department_Business'] == 1)[0]
-b_array = np.where((X1_transform['department_Business'] == 1) & (y1_overall == 1))[0]
-# Force Plot
-for b in b_array:
-    plt.figure()
-    shap.force_plot(explainer_rf1.expected_value[1], shap_values_rf1[b,:], X1_transform.iloc[b, :], matplotlib=True,show=False)
-    plt.savefig('./results/best_models/non_time_series/outcome1/shap_outputs/business_dropouts/shap_force_plot_rf_model_'+str(b)+'.png')
-    plt.close()
-
-for bus in business_array:
-    plt.figure()
-    shap.force_plot(explainer_rf1.expected_value[1], shap_values_rf1[bus,:], X1_transform.iloc[bus, :], matplotlib=True,show=False)
-    plt.savefig('./results/best_models/non_time_series/outcome1/shap_outputs/business_students/shap_force_plot_rf_model_'+str(bus)+'.png')
-    plt.close()
+os.makedirs('./results/best_models/time_series/outcome1/shap_outputs',exist_ok=True)
+os.makedirs('./results/best_models/time_series/outcome1/shap_outputs/business_dropouts',exist_ok=True)
+os.makedirs('./results/best_models/time_series/outcome1/shap_outputs/business_students',exist_ok=True)
 
 for outcome_type in [1]:
     for model_str in ['rf','xgb']:
@@ -93,7 +78,7 @@ for outcome_type in [1]:
             plt.gcf().set_size_inches(w*6/4, w)
             plt.tight_layout()
             print(f'New size: {plt.gcf().get_size_inches()}')
-            plt.savefig('./results/best_models/non_time_series/outcome'+str(outcome_type)+'/shap_outputs'+calibration_str+'/shap_summary_plot_bar_'+model_str+'_model.png', bbox_inches='tight',dpi=100)
+            plt.savefig('./results/best_models/time_series/outcome'+str(outcome_type)+'/shap_outputs'+calibration_str+'/shap_summary_plot_bar_'+model_str+'_model.png', bbox_inches='tight',dpi=100)
             plt.close()
 
             # Summary Plot
@@ -104,11 +89,11 @@ for outcome_type in [1]:
             plt.gcf().set_size_inches(w*6/4, w)
             plt.tight_layout()
             print(f'New size: {plt.gcf().get_size_inches()}')
-            plt.savefig('./results/best_models/non_time_series/outcome'+str(outcome_type)+'/shap_outputs'+calibration_str+'/shap_summary_plot_'+model_str+'_model.png')
+            plt.savefig('./results/best_models/time_series/outcome'+str(outcome_type)+'/shap_outputs'+calibration_str+'/shap_summary_plot_'+model_str+'_model.png')
             plt.close()
             print("SAVED all plots")
             # Save shap values
             shap_values_df = pd.DataFrame(shap_values_i, columns=X1_transform_i_display.columns)
             shap_values_sorted = pd.DataFrame(abs(shap_values_df).mean(axis=0).sort_values(ascending=False)).reset_index().rename(columns={'index':'Feature',0:'mean_abs_shap_value'})
-            pickle.dump(shap_values_df,open('./results/best_models/non_time_series/outcome'+str(outcome_type)+'/shap_outputs'+calibration_str+'/shap_values_df_'+model_str+'.pkl','wb'))
-            shap_values_sorted.to_csv('./results/best_models/non_time_series/outcome'+str(outcome_type)+'/shap_outputs'+calibration_str+'/shap_values_sorted_'+model_str+'.csv',index=False)
+            pickle.dump(shap_values_df,open('./results/best_models/time_series/outcome'+str(outcome_type)+'/shap_outputs'+calibration_str+'/shap_values_df_'+model_str+'.pkl','wb'))
+            shap_values_sorted.to_csv('./results/best_models/time_series/outcome'+str(outcome_type)+'/shap_outputs'+calibration_str+'/shap_values_sorted_'+model_str+'.csv',index=False)

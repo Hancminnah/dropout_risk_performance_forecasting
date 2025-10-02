@@ -197,7 +197,7 @@ pickle.dump(y_train,open('./results/best_models/non_time_series/y_train.pkl','wb
 pickle.dump(y_test,open('./results/best_models/non_time_series/y_test.pkl','wb'))
 print("All models and results saved")
 
-result_colnames = ["auc", "acc", "prec", "recall", "f1", "tpr_final", "fpr"]
+result_colnames = ["auc", "acc", "prec", "recall", "f1", "tpr_final", "fpr_final"]
 result_index_names = ["rf","calibrated_rf","xgb","calibrated_xgb"]
 list_data = [rf_results_outcome, calibrated_rf_results_outcome, xgb_results_outcome, calibrated_xgb_results_outcome]
 results_out = pd.DataFrame(list_data, index=result_index_names, columns=result_colnames)
